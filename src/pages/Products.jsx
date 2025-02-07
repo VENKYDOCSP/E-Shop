@@ -1,59 +1,60 @@
-import { Box, Container, Grid, Pagination, TextField, Typography, Select, MenuItem, FormControl, InputLabel, Grid2 } from '@mui/material';
+import { Box, Container, Grid2, Pagination, TextField, Typography, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 import React, { useEffect, useState, useMemo } from 'react';
-
 import ProductJson from '../ProductJson';
 import Product from '../components/Products/Product';
 import useDebouncedValue from '../components/useDebouncedValue';
 import Breadcrumbs from '../components/Breadcrumbs ';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCategories } from '../redux/features/category/categorySlice';
+import noProductImage from '../assets/notFound.jpg'
 
 const POSTS_PER_PAGE = 8;
-
-
 
 const Products = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [search, setSearch] = useState('');
     const categories = useSelector((state) => state.categories?.categories || "");
-    // console.log(categories, "categories")
     const [selectedCategory, setSelectedCategory] = useState(categories || '');
     const debouncedValue = useDebouncedValue(search, 500);
     const dispatch = useDispatch();
 
+    useEffect(() => {
+        dispatch(setCategories(selectedCategory));
+    }, [selectedCategory, dispatch]);
 
-    const useFilteredProducts = (searchTerm, selectedCategory) => {
-        return useMemo(() => {
-            let filtered = ProductJson;
 
-            if (selectedCategory) {
-                dispatch(setCategories(selectedCategory));
-                filtered = filtered.filter((item) => item.category === selectedCategory);
-            }
+    const filteredProducts = useMemo(() => {
+        let filtered = ProductJson;
 
-            if (searchTerm) {
-                filtered = filtered.filter((item) => item.name.toLowerCase().includes(searchTerm.toLowerCase()));
-            }
+        if (selectedCategory) {
+            filtered = filtered.filter((item) => item.category === selectedCategory);
+        }
 
-            return filtered;
-        }, [searchTerm, selectedCategory]);
+        if (debouncedValue) {
+            filtered = filtered.filter((item) => item.name.toLowerCase().includes(debouncedValue.toLowerCase()));
+        }
 
-    };
-    const filteredProducts = useFilteredProducts(debouncedValue, selectedCategory);
+        return filtered;
+    }, [debouncedValue, selectedCategory]);
+
     const totalPages = useMemo(() => Math.ceil(filteredProducts.length / POSTS_PER_PAGE), [filteredProducts]);
 
     const paginatedValue = useMemo(() => {
         return filteredProducts.slice((currentPage - 1) * POSTS_PER_PAGE, currentPage * POSTS_PER_PAGE);
     }, [filteredProducts, currentPage]);
 
+    useEffect(() => {
+        if (currentPage > totalPages) {
+            setCurrentPage(totalPages || 1);
+        }
+    }, [totalPages, currentPage]);
+
     const handlePageChange = (_, value) => {
         setCurrentPage(value);
         window.scrollTo(0, 0);
     };
 
-    const categoriesData = useMemo(() => {
-        return Array.from(new Set(ProductJson.map((product) => product.category)));
-    }, []);
+    const categoriesData = [...new Set(ProductJson.map((product) => product.category))];
 
     if (!ProductJson || ProductJson.length === 0) {
         return <Typography variant="h6">No products available.</Typography>;
@@ -97,19 +98,27 @@ const Products = () => {
                     </FormControl>
                 </Box>
 
-                <Grid2 container spacing={2}>
-                    {paginatedValue?.map((product) => (
-                        <Grid2 key={product.id} spacing={2} size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
-                            <Product product={product} />
-                        </Grid2>
-                    ))}
-                </Grid2>
+                {paginatedValue.length ? (
+                    <Grid2 container spacing={2}>
+                        {paginatedValue.map((product) => (
+                            <Grid2 key={product.id} size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
+                                <Product product={product} />
+                            </Grid2>
+                        ))}
+                    </Grid2>
+                ) : (
+                    <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+                        <Typography variant="h6">No products available.</Typography>
+                        <Box width={'50%'} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 5 }}  src={noProductImage} component={'img'}/> 
+                    </Box>
+
+                )}
 
                 <Pagination
                     count={totalPages}
                     page={currentPage}
                     onChange={handlePageChange}
-                    color="white"
+                    color="primary"
                     sx={{ mt: 5, display: 'flex', justifyContent: 'center' }}
                     aria-label="Products pagination"
                 />
