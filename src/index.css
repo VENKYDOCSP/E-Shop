@@ -1,0 +1,42 @@
+
+
+@font-face {
+  font-family: "Integral CF";
+  src: url("/public/fonts/IntegralCF-Regular.woff") format("woff"),
+    url("/public/fonts/IntegralCF-Regular.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Satoshi";
+  src: url("/public/fonts/Satoshi-Regular.woff2") format("woff2"),
+    url("/public/fonts/Satoshi-Regular.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  font-family: "Integral CF" !important;
+}
+
+
+::-webkit-scrollbar {
+  width: 10px; /* Adjust the width of the scrollbar */
+  height: 10px; /* For horizontal scrollbar */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.435); /* Set the color of the scrollbar */
+  border-radius: 8px; /* Add border radius for rounded corners */
+}
+
+::-webkit-scrollbar-track {
+  background-color: #f1f1f1; /* Track color */
+  border-radius: 8px; /* Add border radius to the track */
+}
+
+.splide {
+    padding-top: 3% !important;   /* Remove top padding */
+    padding-bottom: 3% !important; /* Remove bottom padding */
+}
