@@ -34,6 +34,8 @@ const CheckOut = () => {
         setDrawerOpen(open);
     };
 
+
+
     const handlePlaceOrder = () => {
         if (selectedItems.length === 0) {
             toast.error("Please select at least one item to place an order.");
@@ -41,6 +43,23 @@ const CheckOut = () => {
         }
         toggleDrawer(true);
     };
+
+    const handleSelectedProduct = (item) => {
+        // if (selectedItems.length === 1) {
+        //     toast.error("Please select at least one item to place an order.");
+        //     return;
+        // }
+
+        setSelectedItems((previousValue) => {
+            const exsisted = previousValue.find((id) => id.id === item.id && id.selectedSize === item.selectedSize);
+            if (exsisted) {
+                return previousValue.filter((id) => id.id !== item.id || id.selectedSize !== item.selectedSize);
+            } else {
+                return [...previousValue, item];
+            }
+        })
+
+    }
 
     const calculateTotal = () => {
         return selectedItems?.map((item) => item?.price * item?.quantity).reduce((a, b) => a + b, 0);
@@ -88,7 +107,9 @@ const CheckOut = () => {
                         </Typography>
                         <ReviewOrder
                             selectedItems={selectedItems}
+                            cartItems={cartItems}
                             handlePlaceOrder={handlePlaceOrder}
+                            handleSelectedProduct={handleSelectedProduct}
                             calculateTotal={calculateTotal}
                         />
                     </Box>

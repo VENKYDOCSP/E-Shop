@@ -27,12 +27,12 @@ const CartSummary = ({ cartItems }) => {
             </Box>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', mt: 1 }}>
                 <Typography variant='h6' sx={{ fontFamily: 'satoshi' }}>Delivery Fees:</Typography>
-                <Typography variant='h6' sx={{ fontFamily: 'satoshi' }}>₹ {total > 100 ? 10 : total > 50 ? 5 : 0}</Typography>
+                <Typography variant='h6' sx={{ fontFamily: 'satoshi' }}>₹ {total > 100 ? 10 :  5 }</Typography>
             </Box>
             <Divider sx={{ my: 1 }} />
             <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', mt: 2 }}>
                 <Typography variant='h6' sx={{ fontFamily: 'satoshi' }}>Total:</Typography>
-                <Typography variant='h6' sx={{ fontFamily: 'satoshi' }}>₹ {total + (total > 100 ? 10 : total > 50 ? 5 : 0)}</Typography>
+                <Typography variant='h6' sx={{ fontFamily: 'satoshi' }}>₹ {total + (total > 100 ? 10 :5 )}</Typography>
             </Box>
            <ButtonComponent name="Checkout" link="/checkout" color="#fff" size="large" variant="contained" onClick={() => { }} sx={{ mt: 2, display: 'block' }} />
         </Box>

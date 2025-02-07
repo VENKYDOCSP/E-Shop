@@ -2,11 +2,11 @@ import React from 'react';
 import { Box, Stack, Typography, Checkbox, Drawer, Divider } from '@mui/material';
 import ButtonComponent from '../Button';
 
-const ReviewOrder = ({ selectedItems, handlePlaceOrder, calculateTotal }) => {
+const ReviewOrder = ({ cartItems, selectedItems, handlePlaceOrder, handleSelectedProduct, calculateTotal }) => {
     return (
         <Box>
             <Stack spacing={2}>
-                {selectedItems?.map((item) => (
+                {cartItems?.map((item) => (
                     <Box
                         key={item.id}
                         sx={{
@@ -27,7 +27,7 @@ const ReviewOrder = ({ selectedItems, handlePlaceOrder, calculateTotal }) => {
                             checked={selectedItems?.some(
                                 (id) => id.id === item.id && id.selectedSize === item.selectedSize
                             )}
-                            onChange={() => handlePlaceOrder(item)}
+                            onChange={() => handleSelectedProduct(item)}
                             color="primary"
                         />
                         <Box sx={{ ml: 2, flex: 1 }}>
@@ -49,13 +49,19 @@ const ReviewOrder = ({ selectedItems, handlePlaceOrder, calculateTotal }) => {
             </Stack>
 
             <Divider sx={{ my: 2 }} />
-        
+
             <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={2}>
                 <Box>
                     <Typography variant="subtitle1">Selected Items: {selectedItems?.length}</Typography>
-                    <Typography variant="subtitle1">Delivery Charges: ₹{calculateTotal() > 100 ? 10 : 5}</Typography>
+                    <Typography variant="subtitle1">
+                        Delivery Charges: ₹{selectedItems?.length > 0 ? (calculateTotal() > 100 ? 10 : 5) : 0}
+                    </Typography>
+
                     <Typography variant="h6" fontWeight="bold">
-                        Total: ₹{calculateTotal() + (calculateTotal() > 100 ? 10 : 5)}
+                        <Typography variant="h6" fontWeight="bold">
+                            Total: ₹{selectedItems?.length > 0 ? calculateTotal() + (calculateTotal() > 100 ? 10 : 5) : 0}
+                        </Typography>
+
                     </Typography>
                 </Box>
                 <ButtonComponent
